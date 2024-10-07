@@ -1,75 +1,78 @@
-abstract class customError extends Error {
+import { CustomError } from "../typings/custom.interface";
+abstract class customError extends Error implements CustomError {
     abstract readonly _message: string;
+    abstract customMessage: string | string[];
     constructor( message : string | string[] ) {
-        
         if ( typeof message === "string" ) {
             super( message );
-            this.message = message || "ERROR";
+            this.message = message;
         } else if ( Array.isArray( message ) ) {
-            super( "ERROR" );
-            this.message = message.join('\n ');
+            super();
         }
-        
     }
 }
 
 export class badRequestError extends customError {
     _message: string = "BadRequest";
+    customMessage!: string | string[];
     constructor( message : string | string[] ) {
         super( message );
         if ( typeof message === "string" ) {
-            this.message = message || this._message;
+            this.customMessage = message || this._message;
         } else if ( Array.isArray( message ) ) {
-            this.message = message.join('\n ');
+            this.customMessage = message;
         }
-        
     }
 }
 
 export class unauthorizedError extends customError {
     _message: string = "Unauthorized";
+    customMessage!: string | string[];
     constructor( message : string | string[] ) {
         super( message );
         if ( typeof message === "string" ) {
-            this.message = message || this._message;
+            this.customMessage = message || this._message;
         } else if ( Array.isArray( message ) ) {
-            this.message = message.join('\n ');
+            this.customMessage = message;
         }
     }
 }
 
 export class forbiddenError extends customError {    
     _message: string = "Forbidden";
+    customMessage!: string | string[];
     constructor( message : string | string[] ) {
         super( message );
         if ( typeof message === "string" ) {
-            this.message = message || this._message;
+            this.customMessage = message || this._message;
         } else if ( Array.isArray( message ) ) {
-            this.message = message.join('\n ');
+            this.customMessage = message;
         }
     }
 }
 
 export class notFoundError extends customError {
     _message: string = "Not Found";
+    customMessage!: string | string[];
     constructor( message : string | string[] ) {
         super( message );
         if ( typeof message === "string" ) {
-            this.message = message || this._message;
+            this.customMessage = message || this._message;
         } else if ( Array.isArray( message ) ) {
-            this.message = message.join('\n ');
+            this.customMessage = message;
         }
     }
 }
 
 export class conflictError extends customError {    
     _message: string = "Conflict";
+    customMessage!: string | string[];
     constructor( message : string | string[] ) {
         super( message );
         if ( typeof message === "string" ) {
-            this.message = message || this._message;
+            this.customMessage = message || this._message;
         } else if ( Array.isArray( message ) ) {
-            this.message = message.join('\n ');
+            this.customMessage = message;
         }
     }
 }

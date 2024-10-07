@@ -12,12 +12,12 @@ const customResponse : (
     message : string | string[],
     isOk : boolean,
     data? : object
-) => res.status( statusCode ).json({
+) => { return res.status( statusCode ).json({
     isOk,
     statusCode,
     message,
     data
-})
+})}
 
 const ok : (
     res : Response,

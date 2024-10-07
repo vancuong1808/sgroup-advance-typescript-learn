@@ -1,8 +1,13 @@
+import { CustomError } from './custom.interface.d';
 import { Request } from "express"
 import { JwtPayload } from "jsonwebtoken"
 
 export interface CustomRequest extends Request {
     user? : string | JwtPayload
+}
+
+export interface CustomError {
+    customMessage?: string | string[],
 }
 
 export interface CustomResponseResult {

@@ -11,23 +11,23 @@ export const errorHandler : (
  = ( err : unknown, req : Request, res : Response, next : NextFunction ) => {
 
     if ( err instanceof badRequestError ) {
-        return responseHandler.badRequest( res, err.message );
+        return responseHandler.badRequest( res, err.customMessage );
     }
 
     if ( err instanceof conflictError ) {
-        return responseHandler.conflict( res, err.message );
+        return responseHandler.conflict( res, err.customMessage );
     }
 
     if ( err instanceof forbiddenError ) {
-        return responseHandler.forbidden( res, err.message );
+        return responseHandler.forbidden( res, err.customMessage );
     }
 
     if ( err instanceof notFoundError ) {
-        return responseHandler.notFound( res, err.message );
+        return responseHandler.notFound( res, err.customMessage );
     }
 
     if ( err instanceof unauthorizedError ) {
-        return responseHandler.unauthorized( res, err.message );
+        return responseHandler.unauthorized( res, err.customMessage );
     }
 
     return responseHandler.internalServerError(res, ( err as Error ).message || "INTERNAL_SERVER_ERROR");
