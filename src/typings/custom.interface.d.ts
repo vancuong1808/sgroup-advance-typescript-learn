@@ -1,3 +1,4 @@
+import { RowDataPacket } from 'mysql2';
 import { CustomError } from './custom.interface.d';
 import { Request } from "express"
 import { JwtPayload } from "jsonwebtoken"
@@ -35,6 +36,7 @@ export interface RoleBody {
 }
 
 export interface UserBody {
+    userId? : number
     username: string
     email: string
     password: string

@@ -3,7 +3,7 @@ import responseHandler from "../handlers/response.handler.ts";
 import { NextFunction, Request, Response } from "express";
 import { CustomRequest, RoleBody } from "../typings/custom.interface.ts";
 import { badRequestError, notFoundError, conflictError, forbiddenError } from "../errors/customError.ts";
-import { Result } from "../utils/result.util"
+import { Result } from '../base/result.base.ts';
 import { JwtPayload } from "jsonwebtoken";
 
 const createRole : ( 
@@ -21,24 +21,9 @@ const createRole : (
         }
         const userId : string | JwtPayload = req.user || "";
         const createRoleResult : Result = await roleService.createRole( roleBody, userId );
-        if ( createRoleResult.isOk == false ) {
-            if ( createRoleResult.status == 400 ) {
-                next( new badRequestError( createRoleResult.message ) );
-            }
-            if ( createRoleResult.status == 403 ) {
-                next( new forbiddenError( createRoleResult.message ) );
-            }
-            if ( createRoleResult.status == 404 ) {
-                next( new notFoundError( createRoleResult.message ) );
-            }
-            if ( createRoleResult.status == 409 ) {
-                next( new conflictError( createRoleResult.message ) );
-            }
-        } else {
-            responseHandler.created( res, createRoleResult.message, createRoleResult.data || {} );
-        }
+        responseHandler.created( res, createRoleResult.message, createRoleResult.data || {} );
     } catch (error : unknown ) {
-        next( new Error(`${ error }`));
+        next( new Error() );
     }
 }
 
@@ -58,18 +43,9 @@ const getUserByRoleId : (
             next( new badRequestError("RoleId not valid") );
         }
         const getUserByRoleIdResult : Result = await roleService.getUserByRoleId( roleId, userId );
-        if ( getUserByRoleIdResult.isOk == false ) {
-            if ( getUserByRoleIdResult.status == 403 ) {
-                next( new forbiddenError( getUserByRoleIdResult.message ) );
-            }
-            if ( getUserByRoleIdResult.status == 404 ) {
-                next( new notFoundError( getUserByRoleIdResult.message ) );
-            }
-        } else {
-            responseHandler.ok( res, getUserByRoleIdResult.message, getUserByRoleIdResult.data || {} );
-        }
+        responseHandler.ok( res, getUserByRoleIdResult.message, getUserByRoleIdResult.data || {} );
     } catch (error : unknown ) {
-        next( new Error(`${ error }`));
+        next( new Error() );
     }
 }
 
