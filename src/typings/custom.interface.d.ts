@@ -42,3 +42,12 @@ export interface UserBody {
     password: string
     roleId: number
 }
+
+export interface BookBody {
+    title: string
+    author: string
+}
+
+export interface CategoryBody {
+    categoryName: string
+}
