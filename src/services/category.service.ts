@@ -1,7 +1,7 @@
 import db from '../configs/database.config.ts';
 import { Result } from '../base/result.base.ts';
-import { badRequestError, conflictError, forbiddenError, unauthorizedError, notFoundError } from "../errors/customError.ts";
-import { FieldPacket, QueryResult, ResultSetHeader, RowDataPacket } from 'mysql2';
+import { badRequestError, conflictError, notFoundError } from "../errors/customError.ts";
+import { FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
 import { BookCategoryBody, CategoryBody } from '../typings/custom.interface';
 
 const getAllCategories : () => Promise<Result> = async() => {

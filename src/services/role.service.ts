@@ -1,9 +1,8 @@
-import { FieldPacket, QueryResult, ResultSetHeader, RowDataPacket } from 'mysql2';
+import { FieldPacket, ResultSetHeader, RowDataPacket } from 'mysql2';
 import { RoleBody, UserRoleBody } from './../typings/custom.interface.d';
 import db from "../configs/database.config.ts";
 import { Result } from '../base/result.base.ts';
-import { badRequestError, conflictError, forbiddenError, unauthorizedError, notFoundError } from "../errors/customError.ts";
-import { JwtPayload } from 'jsonwebtoken';
+import { badRequestError, conflictError, notFoundError } from "../errors/customError.ts";
 
 const addRole : ( roleBody : RoleBody ) => Promise<Result>  = async( roleBody : RoleBody ) => {
     try {

@@ -1,6 +1,6 @@
 import authService from "../services/auth.service.ts"
 import responseHandler from "../handlers/response.handler.ts";
-import { badRequestError, notFoundError, conflictError, unauthorizedError } from "../errors/customError.ts";
+import { badRequestError } from "../errors/customError.ts";
 import { NextFunction, Request, Response } from "express";
 import { LoginBody, RegisterBody } from "../typings/custom.interface.ts";
 import { Result } from '../base/result.base.ts';
