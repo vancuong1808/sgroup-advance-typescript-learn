@@ -5,7 +5,7 @@ import { Result } from '../base/result.base.ts';
 import { badRequestError, conflictError, forbiddenError, unauthorizedError, notFoundError } from "../errors/customError.ts";
 import { JwtPayload } from 'jsonwebtoken';
 
-const addRole : ( roleBody : RoleBody, _userId : string | JwtPayload ) => Promise<Result>  = async( roleBody : RoleBody, _userId : string | JwtPayload ) => {
+const addRole : ( roleBody : RoleBody ) => Promise<Result>  = async( roleBody : RoleBody ) => {
     try {
         const isExistRoleName : [ RowDataPacket[], FieldPacket[]] = await db.query('SELECT * FROM roles WHERE roleName = ?', [roleBody.roleName]);
         if ( !isExistRoleName[0] || isExistRoleName[0]?.length > 0 ) {
@@ -141,6 +141,30 @@ const assignRoleToUser : ( userRoleBody : UserRoleBody ) => Promise<Result> = as
     }
 }
 
+const removeRolesOutOfUser : ( userRoleBody : UserRoleBody ) => Promise<Result> = async( userRoleBody : UserRoleBody ) => {
+    try {
+        const isExistUser : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT userId FROM users WHERE userId = ?", [ userRoleBody.userId ]);
+        if ( !isExistUser[0] || isExistUser[0]?.length == 0 ) {
+            throw new notFoundError("UserId not found");
+        }
+        const isExistRole : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT roleId FROM roles WHERE roleId = ?", [ userRoleBody.roleId ]);
+        if ( !isExistRole[0] || isExistRole[0]?.length == 0 ) {
+            throw new notFoundError("RoleId not found");
+        }
+        const isExistUserRole : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT userId, roleId FROM user_roles WHERE userId =? AND roleId =?", [ userRoleBody.userId, userRoleBody.roleId ]);
+        if ( !isExistUserRole[0] || isExistUserRole[0]?.length == 0 ) {
+            throw new notFoundError("User has role not found");
+        }
+        const removeUserRole : [ ResultSetHeader, FieldPacket[]] = await db.query("DELETE FROM user_roles WHERE userId = ? AND roleId = ?", [ userRoleBody.userId, userRoleBody.roleId ]);
+        if ( !removeUserRole[0] || removeUserRole[0]?.affectedRows == 0 ) {
+            throw new badRequestError("User role not deleted");
+        }
+        return new Result( true, 200, "User role deleted", removeUserRole[0] );
+    } catch (error : unknown ) {
+        throw error
+    }
+}
+
 
 export default {
     addRole,
@@ -149,5 +173,6 @@ export default {
     getAllRoles,
     updateRoles,
     deleteRole,
-    assignRoleToUser
+    assignRoleToUser,
+    removeRolesOutOfUser
 }

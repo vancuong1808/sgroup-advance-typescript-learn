@@ -1,5 +1,5 @@
 import { Response, Request, NextFunction } from "express";
-import { GetPerrmission } from "../services/permission.service";
+import permissionService from "../services/permission.service";
 import { badRequestError, forbiddenError, unauthorizedError } from "../errors/customError";
 import { CustomRequest } from './../typings/custom.interface.d';
 import { JwtPayload } from "jsonwebtoken";
@@ -18,7 +18,7 @@ export const RequiredPermissions : (
             if ( !userId ) {
                 throw new unauthorizedError("User is not authenticated");
             }
-            const getPermissionResult : string[] = await GetPerrmission( userId );
+            const getPermissionResult : string[] = await permissionService.GetPerrmission( userId );
             const isExistRequiredPermission : boolean = getPermissionResult.includes( requiredPermission );
             if ( !isExistRequiredPermission ) {
                 throw new forbiddenError("You don't have permission to access this resource");

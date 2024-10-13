@@ -1,3 +1,4 @@
+import { RolePermissions } from './../constants/permission';
 import { RowDataPacket } from 'mysql2';
 import { CustomError } from './custom.interface.d';
 import { Request } from "express"
@@ -35,6 +36,10 @@ export interface RoleBody {
     roleName: string
 }
 
+export interface PermissionBody {
+    permissionName: string
+}
+
 export interface UserBody {
     userId? : number
     username: string
@@ -60,4 +65,9 @@ export interface BookCategoryBody {
 export interface UserRoleBody {
     userId: number
     roleId: number
+}
+
+export interface RolePermissionBody {
+    roleId: number
+    permissionId: number
 }
