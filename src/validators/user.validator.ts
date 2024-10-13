@@ -11,8 +11,5 @@ export const validateUser = [
     body('password')
         .notEmpty().withMessage("Password must be not empty")
         .isLength({ min: 6, max: 32 }).withMessage("Password at least 6 characters and maximum 32 characters")
-        .matches(/^(?!\s{1})(.*(?!\s{2}).*)(?<!\s{1})$/).withMessage("Password not have any spaces"),
-    body('roleId')
-        .notEmpty().withMessage("RoleId must be not empty")
-        .isNumeric().withMessage("RoleId not valid"),
+        .matches(/^(?!\s{1})(.*(?!\s{2}).*)(?<!\s{1})$/).withMessage("Password not have any spaces")
 ]
