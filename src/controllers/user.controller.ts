@@ -1,7 +1,7 @@
 import userService from "../services/user.service.ts"
 import responseHandler from "../handlers/response.handler.ts";
 import { NextFunction, Request, Response } from "express";
-import { badRequestError, forbiddenError ,notFoundError } from "../errors/customError.ts";
+import { badRequestError } from "../errors/customError.ts";
 import { Result } from '../base/result.base.ts';
 import { UserBody } from "../typings/custom.interface.ts";
 
@@ -60,8 +60,7 @@ const updateUser : (
         const userBody : UserBody = {
             username: req.body.username,
             email: req.body.email,
-            password: req.body.password,
-            roleId: Number.parseInt( req.body.roleId )
+            password: req.body.password
         }
         const updateUserResult : Result = await userService.updateUser( userId, userBody );
         responseHandler.ok( res, updateUserResult.message, updateUserResult.data || {} );

@@ -45,7 +45,6 @@ export interface UserBody {
     username: string
     email: string
     password: string
-    roleId: number
 }
 
 export interface BookBody {

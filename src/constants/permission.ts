@@ -1,25 +1,25 @@
-export enum BookPermissions {
+export enum Permissions {
+    //Book
     VIEW_BOOK = "VIEW_BOOK",
     ADD_BOOK = "ADD_BOOK",
     UPDATE_BOOK = "UPDATE_BOOK",
-    DELETE_BOOK = "DELETE_BOOK"
-}
-
-export enum UserPermissions {
+    DELETE_BOOK = "DELETE_BOOK",
+    //User
     VIEW_USER = "VIEW_USER",
     ADD_USER = "ADD_USER",
     UPDATE_USER = "UPDATE_USER",
-    DELETE_USER = "DELETE_USER"
-}
-
-export enum RolePermissions {
+    DELETE_USER = "DELETE_USER",
+    //Role
     VIEW_ROLE = "VIEW_ROLE",
     ADD_ROLE = "ADD_ROLE",
     UPDATE_ROLE = "UPDATE_ROLE",
-    DELETE_ROLE = "DELETE_ROLE"
-}
-
-export enum CategoryPermissions {
+    DELETE_ROLE = "DELETE_ROLE",
+    //permission
+    VIEW_PERMISSION = "VIEW_PERMISSION",
+    ADD_PERMISSION = "ADD_PERMISSION",
+    UPDATE_PERMISSION = "UPDATE_PERMISSION",
+    DELETE_PERMISSION = "DELETE_PERMISSION",
+    //Category
     VIEW_CATEGORY = "VIEW_CATEGORY",
     ADD_CATEGORY = "ADD_CATEGORY",
     UPDATE_CATEGORY = "UPDATE_CATEGORY",
