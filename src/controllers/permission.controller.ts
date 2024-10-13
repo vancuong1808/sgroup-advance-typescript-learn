@@ -19,13 +19,13 @@ const assignPermissionsToRole : (
         if ( !roleId || roleId <= 0 ) {
             next( new badRequestError("RoleId not valid") );
         }
-        const PermissionId : number = Number.parseInt( req.body.permissionId );
-        if ( !PermissionId || PermissionId <= 0 ) {
+        const permissionId : number = Number.parseInt( req.body.permissionId );
+        if ( !permissionId || permissionId <= 0 ) {
             next( new badRequestError("PermissionId not valid") );
         }
         const rolePermissionBody : RolePermissionBody = {
-            roleId: Number.parseInt( req.body.roleId ),
-            permissionId: Number.parseInt( req.body.permissionId )
+            roleId: roleId,
+            permissionId: permissionId
         }
         const assignPermissionsToRoleResult : Result = await permissionService.assignPermissionsToRole( rolePermissionBody );
         responseHandler.created( res, assignPermissionsToRoleResult.message, assignPermissionsToRoleResult.data || {} );
@@ -48,13 +48,13 @@ const removePermissionsFromRole : (
         if ( !roleId || roleId <= 0 ) {
             next( new badRequestError("RoleId not valid") );
         }
-        const PermissionId : number = Number.parseInt( req.body.permissionId );
-        if ( !PermissionId || PermissionId <= 0 ) {
+        const permissionId : number = Number.parseInt( req.body.permissionId );
+        if ( !permissionId || permissionId <= 0 ) {
             next( new badRequestError("PermissionId not valid") );
         }
         const rolePermissionBody : RolePermissionBody = {
-            roleId: Number.parseInt( req.body.roleId ),
-            permissionId: Number.parseInt( req.body.permissionId )
+            roleId: roleId,
+            permissionId: permissionId
         }
         const removePermissionsFromRoleResult : Result = await permissionService.removePermissionsFromRole( rolePermissionBody );
         responseHandler.ok( res, removePermissionsFromRoleResult.message, removePermissionsFromRoleResult.data || {} );

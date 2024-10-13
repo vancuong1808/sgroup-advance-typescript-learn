@@ -2,7 +2,7 @@ import responseHandler from "../handlers/response.handler.ts";
 import { NextFunction, Request, Response } from "express";
 import { badRequestError } from "../errors/customError.ts";
 import { Result } from '../base/result.base.ts';
-import { BookBody, CategoryBody } from "../typings/custom.interface.ts";
+import { BookCategoryBody, BookBody, CategoryBody } from "../typings/custom.interface.ts";
 import bookService from "../services/book.service.ts";
 
 const getAllBooks : (
@@ -166,12 +166,72 @@ const deletedBook : (
     }
 }
 
+const assignBookToCategory : (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => Promise<void> = async( 
+    req: Request, 
+    res: Response, 
+    next: NextFunction 
+) => {
+    try {
+        const categoryId : number = Number.parseInt( req.body.id );
+        if ( !categoryId || categoryId <= 0 ) {
+            next( new badRequestError("CategoryId not valid") );
+        }
+        const bookId : number = Number.parseInt( req.body.id );
+        if ( !bookId || bookId <= 0 ) {
+            next( new badRequestError("BookId not valid") );
+        }
+        const bookCategoryBody : BookCategoryBody = {
+            categoryId: categoryId,
+            bookId: bookId
+        }
+        const assignBookToCategoryResult : Result = await bookService.assignBookToCategory( bookCategoryBody );
+        responseHandler.ok( res, assignBookToCategoryResult.message, assignBookToCategoryResult.data || {} );
+    } catch (error : unknown) {
+        next( new Error() );
+    }
+}
+
+const removeBookFromCategory : (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => Promise<void> = async( 
+    req: Request, 
+    res: Response, 
+    next: NextFunction 
+) => {
+    try {
+        const categoryId : number = Number.parseInt( req.params.id );
+        if ( !categoryId || categoryId <= 0 ) {
+            next( new badRequestError("CategoryId not valid") );
+        }
+        const bookId : number = Number.parseInt( req.body.id );
+        if ( !bookId || bookId <= 0 ) {
+            next( new badRequestError("BookId not valid") );
+        }
+        const bookCategoryBody : BookCategoryBody = {
+            categoryId: categoryId,
+            bookId: bookId
+        }
+        const removeBookFromCategoryResult : Result = await bookService.removeBookFromCategory( bookCategoryBody );
+        responseHandler.ok( res, removeBookFromCategoryResult.message, removeBookFromCategoryResult.data || {} );
+    } catch (error : unknown) {
+        next( new Error() );
+    }
+}
+
 export default {
     getAllBooks,
     getBookByID,
     getBookByName,
     getBookByCategory,
     getBookByAuthor,
+    assignBookToCategory,
+    removeBookFromCategory,
     addBook,
     updateBook,
     deletedBook
