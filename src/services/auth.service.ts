@@ -8,10 +8,6 @@ import { LoginBody, RegisterBody } from "../typings/custom.interface";
 
 const register : ( registerBody : RegisterBody ) => Promise<Result> = async( registerBody : RegisterBody ) => {
     try {
-        const isExistRoleId : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT * FROM roles WHERE roleId = ?", [registerBody.roleId] );
-        if ( !isExistRoleId[0] || isExistRoleId[0]?.length === 0 ) {
-            throw new notFoundError("RoleId not found");
-        }
         const isExistUsername : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT * FROM users WHERE username = ?", [registerBody.username] );
         if ( !isExistUsername[0] || isExistUsername[0]?.length > 0 ) {
             throw new conflictError("User with username already exists");
@@ -21,8 +17,8 @@ const register : ( registerBody : RegisterBody ) => Promise<Result> = async( reg
             throw new conflictError("User with email already exists");
         }
         const hashPasswordResult : string = await hashPassword( registerBody.password );
-        const registerResult : [ ResultSetHeader, FieldPacket[] ] = await db.query("INSERT INTO users( username, email, password, roleId ) VALUES ( ?, ?, ?, ? )", 
-                                        [registerBody.username, registerBody.email, hashPasswordResult, registerBody.roleId] );
+        const registerResult : [ ResultSetHeader, FieldPacket[] ] = await db.query("INSERT INTO users( username, email, password ) VALUES ( ?, ?, ? )", 
+                                        [registerBody.username, registerBody.email, hashPasswordResult] );
         if ( !registerResult[0] || registerResult[0]?.affectedRows == 0 ) {
             throw new badRequestError("Register fail");
         }                                

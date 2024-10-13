@@ -33,7 +33,7 @@ const getUsersByRoleId : ( roleId: number ) => Promise<Result> = async( roleId :
         }
         const userRoles : RowDataPacket[] = isExistUserRole[0];
         const usersOfRole : Promise<RowDataPacket>[] = userRoles.map( async( userRole : RowDataPacket ) => {
-            const isExistUser : [ RowDataPacket[], FieldPacket[] ] = await db.query("SELECT userId, userName, r.roleName FROM users as u INNER JOIN user_roles as ur ON u.userId = ur.userId INNER JOIN roles as r ON ur.roleId = r.roleId WHERE userId = ?", [ userRole.userId] );
+            const isExistUser : [ RowDataPacket[], FieldPacket[] ] = await db.query("SELECT ur.userId, userName, r.roleName FROM users as u INNER JOIN user_roles as ur ON u.userId = ur.userId INNER JOIN roles as r ON ur.roleId = r.roleId WHERE ur.userId", [ userRole.userId] );
             if ( !isExistUser[0] || isExistUser[0]?.length == 0 ) {
                 throw new notFoundError("User not found");
             }
@@ -59,7 +59,7 @@ const getPermissionsByRoleId : ( roleId : number ) => Promise<Result> = async( r
         }
         const permissions : RowDataPacket[] = isExistRolePermission[0];
         const permissionsOfRole : Promise<RowDataPacket>[] = permissions.map( async( permission : RowDataPacket ) => {
-            const isExistPermission : [ RowDataPacket[], FieldPacket[] ] = await db.query("SELECT r.roleName ,permissionId, permissionName FROM permissions as p INNER JOIN role_permissions as rp ON p.permissionId = rp.permissionId INNER JOIN roles as r ON r.roleId = rp.roleId WHERE permissionId = ?", [ permission.permissionId] );
+            const isExistPermission : [ RowDataPacket[], FieldPacket[] ] = await db.query("SELECT r.roleName , rp.permissionId, permissionName FROM permissions as p INNER JOIN role_permissions as rp ON p.permissionId = rp.permissionId INNER JOIN roles as r ON r.roleId = rp.roleId WHERE rp.permissionId = ?", [ permission.permissionId] );
             if ( !isExistPermission[0] || isExistPermission[0]?.length == 0 ) {
                 throw new notFoundError("Permission not found");
             }
