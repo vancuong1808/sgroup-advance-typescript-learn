@@ -3,6 +3,7 @@ import responseHandler from "../handlers/response.handler.ts";
 import { NextFunction, Request, Response } from "express";
 import { RoleBody, UserRoleBody } from "../typings/custom.interface.ts";
 import { Result } from '../base/result.base.ts';
+import { badRequestError } from "../errors/customError.ts";
 
 
 const addRole : ( 
@@ -36,6 +37,9 @@ const getUsersByRoleId : (
 ) => {
     try {
         const roleId : number = Number.parseInt( req.params.id );
+        if ( !roleId || roleId <= 0 ) {
+            throw new badRequestError("Invalid roleId");
+        }
         const getUserByRoleIdResult : Result = await roleService.getUsersByRoleId( roleId );
         responseHandler.ok( res, getUserByRoleIdResult.message, getUserByRoleIdResult.data || {} );
     } catch (error : unknown ) {
@@ -54,6 +58,9 @@ const getPermissionsByRoleId : (
 ) => {
     try {
         const roleId : number = Number.parseInt( req.params.id );
+        if ( !roleId || roleId <= 0 ) {
+            throw new badRequestError("Invalid roleId");
+        }
         const getPermissionsByRoleIdResult : Result = await roleService.getPermissionsByRoleId( roleId );
         responseHandler.ok( res, getPermissionsByRoleIdResult.message, getPermissionsByRoleIdResult.data || {} );
     } catch (error : unknown ) {
@@ -89,6 +96,9 @@ const updateRole : (
 ) => {
     try {
         const roleId : number = Number.parseInt( req.params.id );
+        if ( !roleId || roleId <= 0 ) {
+            throw new badRequestError("Invalid roleId");
+        }
         const roleBody : RoleBody = {
             roleName: req.body.roleName,
         }
@@ -110,6 +120,9 @@ const deleteRole : (
 ) => {
     try {
         const roleId : number = Number.parseInt( req.params.id );
+        if ( !roleId || roleId <= 0 ) {
+            throw new badRequestError("Invalid roleId");
+        }
         const deleteRoleResult : Result = await roleService.deleteRole( roleId );
         responseHandler.ok( res, deleteRoleResult.message, deleteRoleResult.data || {} );
     } catch (error : unknown ) {
@@ -128,8 +141,8 @@ const assignRolesToUser : (
 ) => {
     try {
         const userRoleBody : UserRoleBody = {
-            userId: req.body.userId,
-            roleId: req.body.roleId
+            userId: Number.parseInt( req.body.userId ),
+            roleId: Number.parseInt( req.body.roleId )
         }
         const assignRolesToUserResult : Result = await roleService.assignRolesToUser( userRoleBody );
         responseHandler.ok( res, assignRolesToUserResult.message, assignRolesToUserResult.data || {} );
@@ -149,8 +162,8 @@ const removeRolesFromUser : (
 ) => {
     try {
         const userRoleBody : UserRoleBody = {
-            userId: req.body.userId,
-            roleId: req.body.roleId
+            userId: Number.parseInt( req.body.userId ),
+            roleId: Number.parseInt( req.body.roleId )
         }
         const removeRolesFromUserResult : Result = await roleService.removeRolesFromUser( userRoleBody );
         responseHandler.ok( res, removeRolesFromUserResult.message, removeRolesFromUserResult.data || {} );

@@ -1,5 +1,6 @@
 import permissionService from "../services/permission.service.ts";
 import responseHandler from "../handlers/response.handler.ts";
+import { badRequestError } from "../errors/customError.ts";
 import { NextFunction, Request, Response } from "express";
 import { PermissionBody, RolePermissionBody } from "../typings/custom.interface.ts";
 import { Result } from '../base/result.base.ts';
@@ -63,6 +64,28 @@ const getAllPermissions : (
     }
 }
 
+const getPermissionById : (
+    req : Request,
+    res : Response,
+    next : NextFunction
+) => Promise<void> = async(
+    req : Request,
+    res : Response,
+    next : NextFunction
+) => {
+    try {
+        const permissionId : number = Number.parseInt( req.params.id );
+        if ( !permissionId || permissionId <= 0 ) {
+            next( new badRequestError("PermissionId not valid") );
+        }
+        const getPermissionByIdResult : Result = await permissionService.getPermissionById( permissionId );
+        responseHandler.ok( res, getPermissionByIdResult.message, getPermissionByIdResult.data || {} );
+    }
+    catch (error : unknown ) {
+        next( new Error() );
+    }
+}
+
 const addPermission : (
     req : Request,
     res : Response,
@@ -94,6 +117,9 @@ const updatePermission : (
 ) => {
     try {
         const permissionId : number = Number.parseInt( req.params.id );
+        if ( !permissionId || permissionId <= 0 ) {
+            next( new badRequestError("PermissionId not valid") );
+        }
         const permissionBody : PermissionBody = {
             permissionName: req.body.permissionName
         }
@@ -115,6 +141,9 @@ const deletePermission : (
 ) => {
     try {
         const permissionId : string = req.params.id;
+        if ( !permissionId || permissionId === "" ) {
+            next( new badRequestError("PermissionId not valid") );
+        }
         const deletePermissionResult : Result = await permissionService.deletePermission( permissionId );
         responseHandler.ok( res, deletePermissionResult.message, deletePermissionResult.data || {} );
     } catch (error : unknown ) {
@@ -126,6 +155,7 @@ export default {
     assignPermissionsToRole,
     removePermissionsFromRole,
     getAllPermissions,
+    getPermissionById,
     addPermission,
     updatePermission,
     deletePermission

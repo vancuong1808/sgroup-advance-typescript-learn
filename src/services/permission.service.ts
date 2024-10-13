@@ -122,6 +122,18 @@ const getAllPermissions : () => Promise<Result> = async() => {
     }
 }
 
+const getPermissionById : ( permissionId : number ) => Promise<Result> = async( permissionId : number ) => {
+    try {
+        const isExistPermission : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT * FROM permissions WHERE permissionId = ?", [permissionId]);
+        if ( !isExistPermission[0] || isExistPermission[0]?.length == 0 ) {
+            throw new notFoundError("Permission not found");
+        }
+        return new Result( true, 200, "Get permission success", isExistPermission[0] );
+    } catch (error : unknown ) {
+        throw error
+    }
+}
+
 const updatePermission : ( permissionId : number, permissionBody : PermissionBody ) => Promise<Result> = async( permissionId : number, permissionBody : PermissionBody ) => {
     try {
         const isExistPermission : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT permissionId FROM permissions WHERE permissionId = ?", [permissionId]);
@@ -159,6 +171,7 @@ export default {
     assignPermissionsToRole,
     addPermission,
     getAllPermissions,
+    getPermissionById,
     updatePermission,
     deletePermission,
     removePermissionsFromRole

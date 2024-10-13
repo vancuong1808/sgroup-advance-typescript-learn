@@ -6,8 +6,14 @@ import { validateHandler } from "../../handlers/validator.handler";
 
 const roleRoute = express.Router();
 
-roleRoute.post("/create-role", authenticate, validateRole, validateHandler, roleController.createRole );
+roleRoute.post("/add-role", authenticate, validateRole, validateHandler, roleController.addRole );
 
-roleRoute.get("/get-user-by-role/:id", authenticate, roleController.getUserByRoleId );
+roleRoute.get("/get-user-by-role/:id", authenticate, roleController.getUsersByRoleId );
+
+roleRoute.get("/get-permission-by-role/:id", authenticate, roleController.getPermissionsByRoleId );
+
+roleRoute.get("get-all-roles", authenticate, roleController.getAllRoles );
+
+
 
 export default roleRoute
