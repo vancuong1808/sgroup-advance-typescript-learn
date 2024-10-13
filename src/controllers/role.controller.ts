@@ -140,9 +140,17 @@ const assignRolesToUser : (
     next : NextFunction
 ) => {
     try {
+        const userId : number = Number.parseInt( req.body.userId );
+        if ( !userId || userId <= 0 ) {
+            throw new badRequestError("Invalid userId");
+        }
+        const roleId : number = Number.parseInt( req.params.id );
+        if ( !roleId || roleId <= 0 ) {
+            throw new badRequestError("Invalid roleId");
+        }
         const userRoleBody : UserRoleBody = {
-            userId: Number.parseInt( req.body.userId ),
-            roleId: Number.parseInt( req.body.roleId )
+            userId: userId,
+            roleId: roleId
         }
         const assignRolesToUserResult : Result = await roleService.assignRolesToUser( userRoleBody );
         responseHandler.ok( res, assignRolesToUserResult.message, assignRolesToUserResult.data || {} );
@@ -161,9 +169,17 @@ const removeRolesFromUser : (
     next : NextFunction
 ) => {
     try {
+        const userId : number = Number.parseInt( req.body.userId );
+        if ( !userId || userId <= 0 ) {
+            throw new badRequestError("Invalid userId");
+        }
+        const roleId : number = Number.parseInt( req.params.id );
+        if ( !roleId || roleId <= 0 ) {
+            throw new badRequestError("Invalid roleId");
+        }
         const userRoleBody : UserRoleBody = {
-            userId: Number.parseInt( req.body.userId ),
-            roleId: Number.parseInt( req.body.roleId )
+            userId: userId,
+            roleId: roleId
         }
         const removeRolesFromUserResult : Result = await roleService.removeRolesFromUser( userRoleBody );
         responseHandler.ok( res, removeRolesFromUserResult.message, removeRolesFromUserResult.data || {} );

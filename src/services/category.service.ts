@@ -80,6 +80,30 @@ const assignBookToCategory : ( bookCategoryBody : BookCategoryBody ) => Promise<
     }
 }
 
+const removeBookFromCategory : ( bookCategoryBody : BookCategoryBody ) => Promise<Result> = async( bookCategoryBody : BookCategoryBody ) => {
+    try {
+        const isExistCategory : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT categoryId FROM categories WHERE categoryName = ?", [bookCategoryBody.categoryId] );
+        if ( !isExistCategory[0] || isExistCategory[0]?.length == 0 ) {
+            throw new notFoundError("Category not found");
+        }
+        const isExistBook : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT bookId FROM books WHERE bookId = ?", [bookCategoryBody.bookId] );
+        if ( !isExistBook[0] || isExistBook[0]?.length == 0 ) {
+            throw new notFoundError("Book not found");
+        }
+        const isExistBookCategory : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT bookId, categoryId FROM book_categories WHERE bookId = ? AND categoryId = ?", [bookCategoryBody.bookId, bookCategoryBody.categoryId] );
+        if ( !isExistBookCategory[0] || isExistBookCategory[0]?.length == 0 ) {
+            throw new notFoundError("Book category not found");
+        }
+        const removeBookFromCategoryResult : [ ResultSetHeader, FieldPacket[] ] = await db.query("DELETE FROM book_categories WHERE bookId = ? AND categoryId = ?", [bookCategoryBody.bookId, bookCategoryBody.categoryId] );
+        if ( !removeBookFromCategoryResult[0] || removeBookFromCategoryResult[0]?.affectedRows == 0 ) {
+            throw new badRequestError("Remove book from category failed");
+        }
+        return new Result( true, 200, "Remove book from category success", removeBookFromCategoryResult[0] );
+    } catch ( error : unknown ) {
+        throw error;
+    }
+}
+
 const updateCategory : ( categoryId : number, categoryBody : CategoryBody ) => Promise<Result> = async( categoryId, categoryBody ) => {
     try {
         const isExistCategory : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT categoryId, categoryName FROM categories WHERE categoryId = ?", [categoryId] );
@@ -117,6 +141,7 @@ export default {
     getCategoryByID,
     getCategoryByName,
     assignBookToCategory,
+    removeBookFromCategory,
     addCategory,
     updateCategory,
     deleteCategory

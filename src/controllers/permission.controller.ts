@@ -15,6 +15,14 @@ const assignPermissionsToRole : (
     next : NextFunction
 ) => {
     try {
+        const roleId : number = Number.parseInt( req.body.roleId );
+        if ( !roleId || roleId <= 0 ) {
+            next( new badRequestError("RoleId not valid") );
+        }
+        const PermissionId : number = Number.parseInt( req.body.permissionId );
+        if ( !PermissionId || PermissionId <= 0 ) {
+            next( new badRequestError("PermissionId not valid") );
+        }
         const rolePermissionBody : RolePermissionBody = {
             roleId: Number.parseInt( req.body.roleId ),
             permissionId: Number.parseInt( req.body.permissionId )
@@ -36,6 +44,14 @@ const removePermissionsFromRole : (
     next : NextFunction
 ) => {
     try {
+        const roleId : number = Number.parseInt( req.body.roleId );
+        if ( !roleId || roleId <= 0 ) {
+            next( new badRequestError("RoleId not valid") );
+        }
+        const PermissionId : number = Number.parseInt( req.body.permissionId );
+        if ( !PermissionId || PermissionId <= 0 ) {
+            next( new badRequestError("PermissionId not valid") );
+        }
         const rolePermissionBody : RolePermissionBody = {
             roleId: Number.parseInt( req.body.roleId ),
             permissionId: Number.parseInt( req.body.permissionId )
