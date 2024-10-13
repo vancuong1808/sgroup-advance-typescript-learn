@@ -20,3 +20,13 @@ export const validateBookCategory = [
         .isNumeric().withMessage("BookId must be a number")
         .matches(/^(?!\s{1})(.*(?!\s{2}).*)(?<!\s{1})$/).withMessage("BookId not have any spaces"),
 ]
+
+export const validateRemoveBookCategory = [
+    body('bookId')
+        .notEmpty().withMessage("BookId must be not empty")
+        .isLength({ min: 1 }).withMessage("BookId at least 1 number")
+        .isNumeric().withMessage("BookId must be a number")
+        .matches(/^(?!\s{1})(.*(?!\s{2}).*)(?<!\s{1})$/).withMessage("BookId not have any spaces"),    
+]
+
+

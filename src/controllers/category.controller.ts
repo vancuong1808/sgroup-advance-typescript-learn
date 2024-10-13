@@ -167,11 +167,11 @@ const removeBookFromCategory : (
     next: NextFunction 
 ) => {
     try {
-        const categoryId : number = Number.parseInt( req.body.id );
+        const categoryId : number = Number.parseInt( req.params.id );
         if ( !categoryId || categoryId <= 0 ) {
             next( new badRequestError("CategoryId not valid") );
         }
-        const bookId : number = Number.parseInt( req.params.id );
+        const bookId : number = Number.parseInt( req.body.id );
         if ( !bookId || bookId <= 0 ) {
             next( new badRequestError("BookId not valid") );
         }

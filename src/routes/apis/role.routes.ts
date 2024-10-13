@@ -18,8 +18,9 @@ roleRoute.put("/update-role/:id", authenticate, validateRole, validateHandler, r
 
 roleRoute.delete("/delete-role/:id", authenticate, roleController.deleteRole );
 
-roleRoute.  
+roleRoute.post("assign-roles-to-user", authenticate, roleController.assignRolesToUser );
 
+roleRoute.delete("remove-roles-from-user/:id", authenticate, roleController.removeRolesFromUser );
 
 
 export default roleRoute

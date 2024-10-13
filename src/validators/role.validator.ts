@@ -20,3 +20,11 @@ export const validateUserRole = [
         .isNumeric().withMessage("RoleId must be a number")
         .matches(/^(?!\s{1})(.*(?!\s{2}).*)(?<!\s{1})$/).withMessage("RoleId not have any spaces"),
 ]
+
+export const validateRemoveUserRole = [
+    body('roleId')
+        .notEmpty().withMessage("RoleId must be not empty")
+        .isLength({ min: 1 }).withMessage("RoleId at least 1 number")
+        .isNumeric().withMessage("RoleId must be a number")
+        .matches(/^(?!\s{1})(.*(?!\s{2}).*)(?<!\s{1})$/).withMessage("RoleId not have any spaces"),
+]
