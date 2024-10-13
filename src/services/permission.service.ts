@@ -69,7 +69,7 @@ const assignPermissionsToRole : ( rolePermissionBody : RolePermissionBody ) => P
     }
 }
 
-const removePermissionsOutOfRole : ( rolePermissionBody : RolePermissionBody ) => Promise<Result> = async( rolePermissionBody : RolePermissionBody ) => {
+const removePermissionsFromRole : ( rolePermissionBody : RolePermissionBody ) => Promise<Result> = async( rolePermissionBody : RolePermissionBody ) => {
     try {
         const isExistRole : [ RowDataPacket[], FieldPacket[]] = await db.query('SELECT roleId FROM roles WHERE roleId = ?', [rolePermissionBody.roleId]);
         if ( !isExistRole[0] || isExistRole[0]?.length == 0 ) {
@@ -122,7 +122,7 @@ const getAllPermissions : () => Promise<Result> = async() => {
     }
 }
 
-const updatePermissions : ( permissionId : number, permissionBody : PermissionBody ) => Promise<Result> = async( permissionId : number, permissionBody : PermissionBody ) => {
+const updatePermission : ( permissionId : number, permissionBody : PermissionBody ) => Promise<Result> = async( permissionId : number, permissionBody : PermissionBody ) => {
     try {
         const isExistPermission : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT permissionId FROM permissions WHERE permissionId = ?", [permissionId]);
         if ( !isExistPermission[0] || isExistPermission[0]?.length == 0 ) {
@@ -159,7 +159,7 @@ export default {
     assignPermissionsToRole,
     addPermission,
     getAllPermissions,
-    updatePermissions,
+    updatePermission,
     deletePermission,
-    removePermissionsOutOfRole
+    removePermissionsFromRole
 }

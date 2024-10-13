@@ -60,7 +60,7 @@ const getPermissionsByRoleId : ( roleId : number ) => Promise<Result> = async( r
         }
         const permissions : RowDataPacket[] = isExistRolePermission[0];
         const permissionsOfRole : Promise<RowDataPacket>[] = permissions.map( async( permission : RowDataPacket ) => {
-            const isExistPermission : [ RowDataPacket[], FieldPacket[] ] = await db.query("SELECT permissionId, permissionName FROM permissions WHERE permissionId = ?", [ permission.permissionId] );
+            const isExistPermission : [ RowDataPacket[], FieldPacket[] ] = await db.query("SELECT r.roleName ,permissionId, permissionName FROM permissions as p INNER JOIN role_permissions as rp ON p.permissionId = rp.permissionId INNER JOIN roles as r ON r.roleId = rp.roleId WHERE permissionId = ?", [ permission.permissionId] );
             if ( !isExistPermission[0] || isExistPermission[0]?.length == 0 ) {
                 throw new notFoundError("Permission not found");
             }
@@ -85,7 +85,7 @@ const getAllRoles : () => Promise<Result> = async() => {
     }
 }
 
-const updateRoles : ( roleId : number, roleBody : RoleBody ) => Promise<Result> = async( roleId : number, roleBody : RoleBody ) => {
+const updateRole : ( roleId : number, roleBody : RoleBody ) => Promise<Result> = async( roleId : number, roleBody : RoleBody ) => {
     try {
         const isExistRole : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT * FROM roles WHERE roleId = ?", [ roleId ]);
         if ( !isExistRole[0] || isExistRole[0]?.length == 0 ) {
@@ -117,7 +117,7 @@ const deleteRole : ( roleId : number ) => Promise<Result> = async( roleId : numb
     }
 }
 
-const assignRoleToUser : ( userRoleBody : UserRoleBody ) => Promise<Result> = async( userRoleBody : UserRoleBody ) => {
+const assignRolesToUser : ( userRoleBody : UserRoleBody ) => Promise<Result> = async( userRoleBody : UserRoleBody ) => {
     try {
         const isExistUser : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT userId FROM users WHERE userId = ?", [ userRoleBody.userId ]);
         if ( !isExistUser[0] || isExistUser[0]?.length == 0 ) {
@@ -141,7 +141,7 @@ const assignRoleToUser : ( userRoleBody : UserRoleBody ) => Promise<Result> = as
     }
 }
 
-const removeRolesOutOfUser : ( userRoleBody : UserRoleBody ) => Promise<Result> = async( userRoleBody : UserRoleBody ) => {
+const removeRolesFromUser : ( userRoleBody : UserRoleBody ) => Promise<Result> = async( userRoleBody : UserRoleBody ) => {
     try {
         const isExistUser : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT userId FROM users WHERE userId = ?", [ userRoleBody.userId ]);
         if ( !isExistUser[0] || isExistUser[0]?.length == 0 ) {
@@ -171,8 +171,8 @@ export default {
     getUsersByRoleId,
     getPermissionsByRoleId,
     getAllRoles,
-    updateRoles,
+    updateRole,
     deleteRole,
-    assignRoleToUser,
-    removeRolesOutOfUser
+    assignRolesToUser,
+    removeRolesFromUser
 }
