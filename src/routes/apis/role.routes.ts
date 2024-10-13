@@ -14,6 +14,12 @@ roleRoute.get("/get-permission-by-role/:id", authenticate, roleController.getPer
 
 roleRoute.get("get-all-roles", authenticate, roleController.getAllRoles );
 
+roleRoute.put("/update-role/:id", authenticate, validateRole, validateHandler, roleController.updateRole );
+
+roleRoute.delete("/delete-role/:id", authenticate, roleController.deleteRole );
+
+roleRoute.  
+
 
 
 export default roleRoute

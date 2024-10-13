@@ -144,7 +144,7 @@ const assignRolesToUser : (
         if ( !userId || userId <= 0 ) {
             throw new badRequestError("Invalid userId");
         }
-        const roleId : number = Number.parseInt( req.params.id );
+        const roleId : number = Number.parseInt( req.body.id );
         if ( !roleId || roleId <= 0 ) {
             throw new badRequestError("Invalid roleId");
         }
@@ -169,11 +169,11 @@ const removeRolesFromUser : (
     next : NextFunction
 ) => {
     try {
-        const userId : number = Number.parseInt( req.body.userId );
+        const userId : number = Number.parseInt( req.params.id );
         if ( !userId || userId <= 0 ) {
             throw new badRequestError("Invalid userId");
         }
-        const roleId : number = Number.parseInt( req.params.id );
+        const roleId : number = Number.parseInt( req.body.roleId );
         if ( !roleId || roleId <= 0 ) {
             throw new badRequestError("Invalid roleId");
         }

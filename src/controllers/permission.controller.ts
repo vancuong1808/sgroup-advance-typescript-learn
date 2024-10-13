@@ -44,7 +44,7 @@ const removePermissionsFromRole : (
     next : NextFunction
 ) => {
     try {
-        const roleId : number = Number.parseInt( req.body.roleId );
+        const roleId : number = Number.parseInt( req.params.id );
         if ( !roleId || roleId <= 0 ) {
             next( new badRequestError("RoleId not valid") );
         }
