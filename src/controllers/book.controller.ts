@@ -2,7 +2,7 @@ import responseHandler from "../handlers/response.handler.ts";
 import { NextFunction, Request, Response } from "express";
 import { badRequestError } from "../errors/customError.ts";
 import { Result } from '../base/result.base.ts';
-import { BookBody } from "../typings/custom.interface.ts";
+import { BookBody, CategoryBody } from "../typings/custom.interface.ts";
 import bookService from "../services/book.service.ts";
 
 const getAllBooks : (
@@ -56,6 +56,44 @@ const getBookByName : (
         const title : string = req.body.title; 
         const getBookByNameResult : Result = await bookService.getBookByName( title );
         responseHandler.ok( res, getBookByNameResult.message, getBookByNameResult.data || {} );
+    } catch (error : unknown) {
+        next( new Error() );
+    }
+}
+
+const getBookByAuthor : (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => Promise<void> = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const author : string = req.body.author;
+        const getBookByAuthorResult : Result = await bookService.getBookByAuthor( author );
+        responseHandler.ok( res, getBookByAuthorResult.message, getBookByAuthorResult.data || {} );
+    } catch (error : unknown) {
+        next( new Error() );
+    }
+}
+
+const getBookByCategory : (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => Promise<void> = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const categoryBody : CategoryBody = {
+            categoryName: req.body.categoryName,
+        }
+        const getBookByCategoryResult : Result = await bookService.getBookByCategory( categoryBody );
+        responseHandler.ok( res, getBookByCategoryResult.message, getBookByCategoryResult.data || {} );
     } catch (error : unknown) {
         next( new Error() );
     }
@@ -132,6 +170,8 @@ export default {
     getAllBooks,
     getBookByID,
     getBookByName,
+    getBookByCategory,
+    getBookByAuthor,
     addBook,
     updateBook,
     deletedBook

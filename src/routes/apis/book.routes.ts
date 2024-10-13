@@ -13,6 +13,10 @@ bookRoute.get("/get-book/:id", authenticate, RequiredPermissions( BookPermission
 
 bookRoute.get("/get-book/", authenticate, RequiredPermissions( BookPermissions.VIEW_BOOK ), validateBookTitle, validateHandler, bookControllers.getBookByName );
 
+bookRoute.get("/get-book/category/:id", authenticate, RequiredPermissions( BookPermissions.VIEW_BOOK ), bookControllers.getBookByCategory );
+
+bookRoute.get("/get-book/author/:id", authenticate, RequiredPermissions( BookPermissions.VIEW_BOOK ), bookControllers.getBookByAuthor );
+
 bookRoute.post("/create-book", authenticate, RequiredPermissions( BookPermissions.ADD_BOOK ), validateBook, validateHandler, bookControllers.addBook );
 
 bookRoute.put("/update-book/:id", authenticate, RequiredPermissions( BookPermissions.UPDATE_BOOK ) ,validateBook, validateHandler, bookControllers.updateBook );
