@@ -10,10 +10,6 @@ const getAllUsers : () => Promise<Result> = async() => {
         if ( !isExistUsers[0] || isExistUsers[0]?.length == 0 ) {
             throw new notFoundError("Users not found");
         }
-        const users = isExistUsers[0][0];
-        if ( users.roleId != 1 ) {
-            throw new forbiddenError("You don't have permission to get all users");
-        }
         return new Result( true, 200, "Get all users success", isExistUsers[0] );
     } catch (error : unknown ) {
         throw error;
@@ -25,10 +21,6 @@ const getUserByID : ( userId: number ) => Promise<Result> = async( userId ) => {
         const isExistUser : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT username, email, u.roleId, role_name FROM users as u INNER JOIN roles as r ON u.roleId = r.roleId  WHERE userId = ?", [userId] );
         if ( !isExistUser[0] || isExistUser[0]?.length == 0 ) {
             throw new notFoundError("User not found");
-        }
-        const user = isExistUser[0][0];
-        if ( user.roleId != 1 ) {
-            throw new forbiddenError("You don't have permission to get user");
         }
         return new Result( true, 200, "Get user success", isExistUser[0] );
     } catch (error : unknown ) {
@@ -47,10 +39,6 @@ const updateUser : ( userId : number, userBody : UserBody ) => Promise<Result> =
         if ( !isExistUserId[0] || isExistUserId[0]?.length == 0 ) {
             throw new notFoundError("UserId not found");
         }
-        const user : RowDataPacket = isExistUserId[0][0];
-        if ( user.roleId != 1 ) {
-            throw new forbiddenError("You don't have permission to update user");
-        }
         const updatedUser : [ ResultSetHeader, FieldPacket[]] = await db.query("UPDATE users SET username = ?, email = ?, password = ?, roleId = ? WHERE userId = ?",
                                             [ userBody.username, userBody.email, userBody.password, userBody.roleId, userId ] );
         if ( !updatedUser[0] || updatedUser[0]?.affectedRows == 0 ) {
@@ -67,10 +55,6 @@ const deleteUser : ( userId: number ) => Promise<Result> = async( userId ) => {
         const isExistUserId : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT * FROM users WHERE userId", [userId] );
         if ( !isExistUserId[0] || isExistUserId[0]?.length == 0 ) {
             throw new notFoundError("UserId not found");
-        }
-        const user : RowDataPacket = isExistUserId[0][0];
-        if ( user.roleId != 1 ) {
-            throw new forbiddenError("You don't have permission to delete user");
         }
         const deletedUser : [ ResultSetHeader, FieldPacket[]] = await db.query("DELETE FROM users WHERE userId = ?", [userId] );
         if ( !deletedUser || deletedUser[0]?.affectedRows == 0 ) {
