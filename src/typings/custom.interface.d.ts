@@ -51,3 +51,8 @@ export interface BookBody {
 export interface CategoryBody {
     categoryName: string
 }
+
+export interface BookCategoryBody {
+    bookId: number
+    categoryId: number
+}
