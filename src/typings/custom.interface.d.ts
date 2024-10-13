@@ -32,7 +32,7 @@ export interface LoginBody {
 }
 
 export interface RoleBody {
-    role_name: string
+    roleName: string
 }
 
 export interface UserBody {
@@ -55,4 +55,9 @@ export interface CategoryBody {
 export interface BookCategoryBody {
     bookId: number
     categoryId: number
+}
+
+export interface UserRoleBody {
+    userId: number
+    roleId: number
 }

@@ -1,55 +1,141 @@
 import { FieldPacket, QueryResult, ResultSetHeader, RowDataPacket } from 'mysql2';
-import { RoleBody } from './../typings/custom.interface.d';
+import { RoleBody, UserRoleBody } from './../typings/custom.interface.d';
 import db from "../configs/database.config.ts";
 import { Result } from '../base/result.base.ts';
 import { badRequestError, conflictError, forbiddenError, unauthorizedError, notFoundError } from "../errors/customError.ts";
 import { JwtPayload } from 'jsonwebtoken';
 
-const createRole : ( roleBody : RoleBody, _userId : string | JwtPayload ) => Promise<Result>  = async( roleBody : RoleBody, _userId : string | JwtPayload ) => {
+const addRole : ( roleBody : RoleBody, _userId : string | JwtPayload ) => Promise<Result>  = async( roleBody : RoleBody, _userId : string | JwtPayload ) => {
     try {
-        const userId = typeof _userId === "string" ? _userId : _userId.userId;
-        const isExistUserId : [ RowDataPacket[], FieldPacket[]] = await db.query('SELECT * FROM users WHERE userId = ?', [userId]);
-        if ( !isExistUserId[0] || isExistUserId[0]?.length == 0 ) {
-            throw new notFoundError("UserId not found");
-        }
-        const user : RowDataPacket = isExistUserId[0][0];
-        if ( user.roleId != 1 ) {
-            throw new forbiddenError("You don't have permission to create role");
-        }
-        const isExistRoleName : [ RowDataPacket[], FieldPacket[]] = await db.query('SELECT * FROM roles WHERE role_name = ?', [roleBody.role_name]);
+        const isExistRoleName : [ RowDataPacket[], FieldPacket[]] = await db.query('SELECT * FROM roles WHERE roleName = ?', [roleBody.roleName]);
         if ( !isExistRoleName[0] || isExistRoleName[0]?.length > 0 ) {
             throw new conflictError("Role name already exists");
         }
-        const createRole : [ ResultSetHeader, FieldPacket[]]= await db.query('INSERT INTO roles( role_name ) VALUES ( ? )', [roleBody.role_name]);
-        if ( !createRole[0] || createRole[0]?.affectedRows == 0 ) {
+        const addRole : [ ResultSetHeader, FieldPacket[]]= await db.query('INSERT INTO roles( roleName ) VALUES ( ? )', [roleBody.roleName]);
+        if ( !addRole[0] || addRole[0]?.affectedRows == 0 ) {
             throw new badRequestError("Role not created");
         }
-        return new Result( true, 200, "Role created", createRole[0] );
+        return new Result( true, 200, "Role created", addRole[0] );
     } catch (error : unknown ) {
         throw error
     }
 }
 
-const getUserByRoleId : ( roleId: number, _userId : string | JwtPayload ) => Promise<Result> = async( roleId : number, _userId : string | JwtPayload ) => {
+const getUsersByRoleId : ( roleId: number ) => Promise<Result> = async( roleId : number ) => {
     try {
-        const userId = typeof _userId === "string" ? _userId : _userId.userId;
-        const isExistUserId : [ RowDataPacket[], FieldPacket[]] = await db.query('SELECT * FROM users WHERE userId = ?', [userId]);
-        if ( !isExistUserId[0] || isExistUserId[0]?.length == 0 ) {
-            throw new notFoundError("UserId not found");
-        }
-        const user : RowDataPacket = isExistUserId[0][0];
-        if ( user.roleId != 1 ) {
-            throw new forbiddenError("You don't have permission to get role");
-        }
-        const isExistRoleId : [ RowDataPacket[], FieldPacket[]]= await db.query('SELECT * FROM roles WHERE roleId = ?', [roleId]);
-        if ( !isExistRoleId[0] || isExistRoleId[0]?.length == 0 ) {
+        const isExistRole : [ RowDataPacket[], FieldPacket[]] = await db.query('SELECT roleId FROM roles WHERE roleId = ?', [roleId]);
+        if ( !isExistRole[0] || isExistRole[0]?.length == 0 ) {
             throw new notFoundError("RoleId not found");
         }
-        const role : [ RowDataPacket[], FieldPacket[]] = await db.query('SELECT username, email, u.roleId, role_name FROM users as u INNER JOIN roles as r ON u.roleId = r.roleId WHERE r.roleId = ?', [roleId]);
-        if ( !role[0] || role[0]?.length == 0 ) {
-            throw new notFoundError("User has this role is not found");
+        const role : RowDataPacket = isExistRole[0][0];
+        const isExistUserRole : [ RowDataPacket[], FieldPacket[] ] = await db.query("SELECT userId FROM user_roles WHERE roleId = ?", [ role.roleId ] )
+        if ( !isExistUserRole[0] || isExistUserRole[0]?.length == 0 ) {
+            throw new notFoundError("User has role not found");
         }
-        return new Result( true, 200, "Get role success", role[0] );
+        const userRoles : RowDataPacket[] = isExistUserRole[0];
+        const usersOfRole : Promise<RowDataPacket>[] = userRoles.map( async( userRole : RowDataPacket ) => {
+            const isExistUser : [ RowDataPacket[], FieldPacket[] ] = await db.query("SELECT userId, userName, r.roleName FROM users as u INNER JOIN user_roles as ur ON u.userId = ur.userId INNER JOIN roles as r ON ur.roleId = r.roleId WHERE userId = ?", [ userRole.userId] );
+            if ( !isExistUser[0] || isExistUser[0]?.length == 0 ) {
+                throw new notFoundError("User not found");
+            }
+            return isExistUser[0][0];
+        } )
+        const users : RowDataPacket[] = await Promise.all( usersOfRole );
+        return new Result( true, 200, "Get user by roleId success", users );
+    } catch (error : unknown ) {
+        throw error
+    }
+}
+
+const getPermissionsByRoleId : ( roleId : number ) => Promise<Result> = async( roleId : number ) => {
+    try {
+        const isExistRole : [ RowDataPacket[], FieldPacket[]] = await db.query('SELECT roleId FROM roles WHERE roleId = ?', [roleId]);
+        if ( !isExistRole[0] || isExistRole[0]?.length == 0 ) {
+            throw new notFoundError("RoleId not found");
+        }
+        const role : RowDataPacket = isExistRole[0][0];
+        const isExistRolePermission : [ RowDataPacket[], FieldPacket[] ] = await db.query("SELECT permissionId FROM role_permissions WHERE roleId = ?", [ role.roleId ] )
+        if ( !isExistRolePermission[0] || isExistRolePermission[0]?.length == 0 ) {
+            throw new notFoundError("Permissions not found");
+        }
+        const permissions : RowDataPacket[] = isExistRolePermission[0];
+        const permissionsOfRole : Promise<RowDataPacket>[] = permissions.map( async( permission : RowDataPacket ) => {
+            const isExistPermission : [ RowDataPacket[], FieldPacket[] ] = await db.query("SELECT permissionId, permissionName FROM permissions WHERE permissionId = ?", [ permission.permissionId] );
+            if ( !isExistPermission[0] || isExistPermission[0]?.length == 0 ) {
+                throw new notFoundError("Permission not found");
+            }
+            return isExistPermission[0][0];
+        } )
+        const permissionsOfRoleName : RowDataPacket[] = await Promise.all( permissionsOfRole );
+        return new Result( true, 200, "Get permissions by roleId success", permissionsOfRoleName );
+    } catch (error : unknown ) {
+        throw error
+    }
+}
+
+const getAllRoles : () => Promise<Result> = async() => {
+    try {
+        const isExistRoles : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT * FROM roles");
+        if ( !isExistRoles[0] || isExistRoles[0]?.length == 0 ) {
+            throw new notFoundError("Roles not found");
+        }
+        return new Result( true, 200, "Get all roles success", isExistRoles[0] );
+    } catch ( error : unknown ) {
+        throw error;
+    }
+}
+
+const updateRoles : ( roleId : number, roleBody : RoleBody ) => Promise<Result> = async( roleId : number, roleBody : RoleBody ) => {
+    try {
+        const isExistRole : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT * FROM roles WHERE roleId = ?", [ roleId ]);
+        if ( !isExistRole[0] || isExistRole[0]?.length == 0 ) {
+            throw new notFoundError("RoleId not found");
+        }
+        const updateRole : [ ResultSetHeader, FieldPacket[]] = await db.query("UPDATE roles SET roleName = ? WHERE roleId = ?", [roleBody.roleName, roleId]);
+        if ( !updateRole[0] || updateRole[0]?.affectedRows == 0 ) {
+            throw new badRequestError("Role not updated");
+        }
+        return new Result( true, 200, "Role updated", updateRole[0] );
+    } catch (error : unknown ) {
+        throw error
+    }
+}
+
+const deleteRole : ( roleId : number ) => Promise<Result> = async( roleId : number ) => {
+    try {
+        const isExistRole : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT roleId FROM roles WHERE roleId = ?", [ roleId ]);
+        if ( !isExistRole[0] || isExistRole[0]?.length == 0 ) {
+            throw new notFoundError("RoleId not found");
+        }
+        const deleteRole : [ ResultSetHeader, FieldPacket[]] = await db.query("DELETE FROM roles WHERE roleId = ?", [ roleId ]);
+        if ( !deleteRole[0] || deleteRole[0]?.affectedRows == 0 ) {
+            throw new badRequestError("Role not deleted");
+        }
+        return new Result( true, 200, "Role deleted", deleteRole[0] );
+    } catch (error : unknown ) {
+        throw error
+    }
+}
+
+const assignRoleToUser : ( userRoleBody : UserRoleBody ) => Promise<Result> = async( userRoleBody : UserRoleBody ) => {
+    try {
+        const isExistUser : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT userId FROM users WHERE userId = ?", [ userRoleBody.userId ]);
+        if ( !isExistUser[0] || isExistUser[0]?.length == 0 ) {
+            throw new notFoundError("UserId not found");
+        }
+        const isExistRole : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT roleId FROM roles WHERE roleId = ?", [ userRoleBody.roleId ]);
+        if ( !isExistRole[0] || isExistRole[0]?.length == 0 ) {
+            throw new notFoundError("RoleId not found");
+        }
+        const isExistUserRole : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT userId, roleId FROM user_roles WHERE userId =? AND roleId =?", [ userRoleBody.userId, userRoleBody.roleId ]);
+        if ( !isExistUserRole[0] || isExistUserRole[0]?.length > 0 ) {
+            throw new conflictError("User has role already exist");
+        }
+        const addUserRole : [ ResultSetHeader, FieldPacket[]] = await db.query("INSERT INTO user_roles( userId, roleId ) VALUES ( ?, ? )", [ userRoleBody.userId, userRoleBody.roleId ]);
+        if ( !addUserRole[0] || addUserRole[0]?.affectedRows == 0 ) {
+            throw new badRequestError("User role not assgin");
+        }
+        return new Result( true, 200, "User role created", addUserRole[0] );
     } catch (error : unknown ) {
         throw error
     }
@@ -57,6 +143,11 @@ const getUserByRoleId : ( roleId: number, _userId : string | JwtPayload ) => Pro
 
 
 export default {
-    createRole,
-    getUserByRoleId
+    addRole,
+    getUsersByRoleId,
+    getPermissionsByRoleId,
+    getAllRoles,
+    updateRoles,
+    deleteRole,
+    assignRoleToUser
 }
