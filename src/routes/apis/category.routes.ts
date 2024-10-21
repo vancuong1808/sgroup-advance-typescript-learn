@@ -11,7 +11,7 @@ categoryRoute.get("/get-category", authenticate, RequiredPermissions( Permission
 
 categoryRoute.get("/get-category/:id", authenticate, RequiredPermissions( Permissions.VIEW_CATEGORY ), categoryControllers.getCategoryByID );
 
-categoryRoute.get("/get-category/name", authenticate, RequiredPermissions( Permissions.VIEW_CATEGORY ), validateCategory, validateHandler, categoryControllers.getCategoryByName );
+categoryRoute.get("/get-category-by-name", authenticate, RequiredPermissions( Permissions.VIEW_CATEGORY ), validateCategory, validateHandler, categoryControllers.getCategoryByName );
 
 categoryRoute.post("/add-category", authenticate, RequiredPermissions( Permissions.ADD_CATEGORY ), validateCategory, validateHandler, categoryControllers.addCategory );
 

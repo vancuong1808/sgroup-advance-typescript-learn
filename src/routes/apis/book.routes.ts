@@ -12,11 +12,11 @@ bookRoute.get("/get-book", authenticate, RequiredPermissions( Permissions.VIEW_B
 
 bookRoute.get("/get-book/:id", authenticate, RequiredPermissions( Permissions.VIEW_BOOK ), bookControllers.getBookByID );
 
-bookRoute.get("/get-book/name", authenticate, RequiredPermissions( Permissions.VIEW_BOOK ), validateBookTitle, validateHandler, bookControllers.getBookByName );
+bookRoute.get("/get-book-by-name", authenticate, RequiredPermissions( Permissions.VIEW_BOOK ), validateBookTitle, validateHandler, bookControllers.getBookByName );
 
-bookRoute.get("/get-book/category/:id", authenticate, RequiredPermissions( Permissions.VIEW_BOOK ), validateCategory, validateHandler, bookControllers.getBookByCategory );
+bookRoute.get("/get-book-by-category", authenticate, RequiredPermissions( Permissions.VIEW_BOOK ), validateCategory, validateHandler, bookControllers.getBookByCategory );
 
-bookRoute.get("/get-book/author/:id", authenticate, RequiredPermissions( Permissions.VIEW_BOOK ), validateBookAuthor, validateHandler, bookControllers.getBookByAuthor );
+bookRoute.get("/get-book-by-author", authenticate, RequiredPermissions( Permissions.VIEW_BOOK ), validateBookAuthor, validateHandler, bookControllers.getBookByAuthor );
 
 bookRoute.post("/add-book", authenticate, RequiredPermissions( Permissions.ADD_BOOK ), validateBook, validateHandler, bookControllers.addBook );
 
