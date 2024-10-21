@@ -18,7 +18,7 @@ const getAllBooks : (
         const getAllBooksResult : Result = await bookService.getAllBooks();
         responseHandler.ok( res, getAllBooksResult.message, getAllBooksResult.data || {} );
     } catch( error : unknown ) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -39,7 +39,7 @@ const getBookByID : (
         const getBookByIdResult : Result = await bookService.getBookByID( bookId );
         responseHandler.ok( res, getBookByIdResult.message, getBookByIdResult.data || {} );
     } catch (error : unknown) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -57,7 +57,7 @@ const getBookByName : (
         const getBookByNameResult : Result = await bookService.getBookByName( title );
         responseHandler.ok( res, getBookByNameResult.message, getBookByNameResult.data || {} );
     } catch (error : unknown) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -75,7 +75,7 @@ const getBookByAuthor : (
         const getBookByAuthorResult : Result = await bookService.getBookByAuthor( author );
         responseHandler.ok( res, getBookByAuthorResult.message, getBookByAuthorResult.data || {} );
     } catch (error : unknown) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -95,7 +95,7 @@ const getBookByCategory : (
         const getBookByCategoryResult : Result = await bookService.getBookByCategory( categoryBody );
         responseHandler.ok( res, getBookByCategoryResult.message, getBookByCategoryResult.data || {} );
     } catch (error : unknown) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -116,7 +116,7 @@ const addBook : (
         const addBookResult : Result = await bookService.addBook( bookBody );
         responseHandler.created( res, addBookResult.message, addBookResult.data || {} );
     } catch ( error : unknown ) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -141,7 +141,7 @@ const updateBook : (
         const updateBookResult : Result = await bookService.updateBook( bookId, bookBody );
         responseHandler.ok( res, updateBookResult.message, updateBookResult.data || {} );
     } catch ( error : unknown ) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -162,7 +162,7 @@ const deletedBook : (
         const deletedBookResult : Result = await bookService.deleteBook( bookId );
         responseHandler.ok( res, deletedBookResult.message, deletedBookResult.data || {} );
     } catch ( error : unknown ) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -191,7 +191,7 @@ const assignBookToCategory : (
         const assignBookToCategoryResult : Result = await bookService.assignBookToCategory( bookCategoryBody );
         responseHandler.ok( res, assignBookToCategoryResult.message, assignBookToCategoryResult.data || {} );
     } catch (error : unknown) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -220,7 +220,7 @@ const removeBookFromCategory : (
         const removeBookFromCategoryResult : Result = await bookService.removeBookFromCategory( bookCategoryBody );
         responseHandler.ok( res, removeBookFromCategoryResult.message, removeBookFromCategoryResult.data || {} );
     } catch (error : unknown) {
-        next( new Error() );
+        next( error );
     }
 }
 

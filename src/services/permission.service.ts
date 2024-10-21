@@ -16,15 +16,16 @@ const GetPerrmission : ( userId : string | JwtPayload ) => Promise<string[]> = a
             throw new notFoundError("User's role not found");
         }
         const roles : RowDataPacket[] = isExistUserRole[0];
-        const rolesOfUser : Promise<Number>[] = roles.map( async( role : RowDataPacket ) => {
+        const rolesOfUser : Promise<number>[] = roles.map( async( role : RowDataPacket ) => {
             const isExistRole : [ RowDataPacket[], FieldPacket[] ] = await db.query("SELECT roleId FROM roles WHERE roleId = ?", [ role.roleId] );
             if ( !isExistRole[0] || isExistRole[0]?.length == 0 ) {
                 throw new notFoundError("Role not found");
             }
             return isExistRole[0][0].roleId;
         } )
-
-        const isExistPermissions : [ RowDataPacket[], FieldPacket[] ] = await db.query("SELECT permissionId FROM role_permissions WHERE roleId IN (?)", [ rolesOfUser ]);
+        const rolesOfUserIds : number[] = await Promise.all( rolesOfUser );
+        
+        const isExistPermissions : [ RowDataPacket[], FieldPacket[] ] = await db.query("SELECT permissionId FROM role_permissions WHERE roleId IN (?)", [ rolesOfUserIds ]);
         if ( !isExistPermissions[0] || isExistPermissions[0]?.length == 0 ) {
             throw new notFoundError("Permissions not found");
         }

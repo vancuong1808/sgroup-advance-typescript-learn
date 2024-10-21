@@ -29,7 +29,7 @@ const register : (
         const registerResult : Result = await authService.register( registerBody );
         responseHandler.created( res, registerResult.message, registerResult.data || {} );
     } catch (error : unknown ) {
-        next( new Error());
+        next( error);
     }
 }
 
@@ -50,7 +50,7 @@ const login : (
         const loginResult : Result = await authService.login( loginBody );
         responseHandler.ok( res, loginResult.message, loginResult.data || {} );
     } catch (error : unknown ) {
-        next( new Error());
+        next( error);
     }
 }
 

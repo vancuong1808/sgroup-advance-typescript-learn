@@ -18,7 +18,7 @@ const getAllUsers : (
         const getAllUsersResult : Result = await userService.getAllUsers();
         responseHandler.ok( res, getAllUsersResult.message, getAllUsersResult.data || {} );
     } catch( error : unknown ) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -39,7 +39,7 @@ const getUserByID : (
         const userResult : Result = await userService.getUserByID( userId );
         responseHandler.ok( res, userResult.message, userResult.data || {} );
     } catch (error : unknown) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -65,7 +65,7 @@ const updateUser : (
         const updateUserResult : Result = await userService.updateUser( userId, userBody );
         responseHandler.ok( res, updateUserResult.message, updateUserResult.data || {} );
     } catch (error : unknown ) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -86,7 +86,7 @@ const deletedUser : (
         const deletedUserResult : Result = await userService.deleteUser( userId );
         responseHandler.ok( res, deletedUserResult.message, deletedUserResult.data || {} );
     } catch (error : unknown ) {
-        next( new Error() );
+        next( error );
     }
 }
 

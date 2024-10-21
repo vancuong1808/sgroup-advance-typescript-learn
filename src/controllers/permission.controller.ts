@@ -30,7 +30,7 @@ const assignPermissionsToRole : (
         const assignPermissionsToRoleResult : Result = await permissionService.assignPermissionsToRole( rolePermissionBody );
         responseHandler.created( res, assignPermissionsToRoleResult.message, assignPermissionsToRoleResult.data || {} );
     } catch (error : unknown ) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -59,7 +59,7 @@ const removePermissionsFromRole : (
         const removePermissionsFromRoleResult : Result = await permissionService.removePermissionsFromRole( rolePermissionBody );
         responseHandler.ok( res, removePermissionsFromRoleResult.message, removePermissionsFromRoleResult.data || {} );
     } catch (error : unknown ) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -76,7 +76,7 @@ const getAllPermissions : (
         const getAllPermissionsResult : Result = await permissionService.getAllPermissions();
         responseHandler.ok( res, getAllPermissionsResult.message, getAllPermissionsResult.data || {} );
     } catch (error : unknown ) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -98,7 +98,7 @@ const getPermissionById : (
         responseHandler.ok( res, getPermissionByIdResult.message, getPermissionByIdResult.data || {} );
     }
     catch (error : unknown ) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -118,7 +118,7 @@ const addPermission : (
         const addPermissionResult : Result = await permissionService.addPermission( permissionBody );
         responseHandler.created( res, addPermissionResult.message, addPermissionResult.data || {} );
     } catch (error : unknown ) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -142,7 +142,7 @@ const updatePermission : (
         const updatePermissionResult : Result = await permissionService.updatePermission( permissionId, permissionBody );
         responseHandler.ok( res, updatePermissionResult.message, updatePermissionResult.data || {} );
     } catch (error : unknown ) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -163,7 +163,7 @@ const deletePermission : (
         const deletePermissionResult : Result = await permissionService.deletePermission( permissionId );
         responseHandler.ok( res, deletePermissionResult.message, deletePermissionResult.data || {} );
     } catch (error : unknown ) {
-        next( new Error() );
+        next( error );
     }
 }
 

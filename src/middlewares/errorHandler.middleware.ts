@@ -29,5 +29,6 @@ export const errorHandler : (
     if ( err instanceof unauthorizedError ) {
         return responseHandler.unauthorized( res, err.customMessage );
     }
+
     return responseHandler.internalServerError(res, ( err as Error ).message || "INTERNAL_SERVER_ERROR");
 }

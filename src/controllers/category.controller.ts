@@ -18,7 +18,7 @@ const getAllCategories : (
         const getAllCategoriesResult : Result = await categoryService.getAllCategories();
         responseHandler.ok( res, getAllCategoriesResult.message, getAllCategoriesResult.data || {} );
     } catch( error : unknown ) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -39,7 +39,7 @@ const getCategoryByID : (
         const getCategoryByIdResult : Result = await categoryService.getCategoryByID( categoryId );
         responseHandler.ok( res, getCategoryByIdResult.message, getCategoryByIdResult.data || {} );
     } catch (error : unknown) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -59,7 +59,7 @@ const getCategoryByName : (
         const getCategoryByNameResult : Result = await categoryService.getCategoryByName( categoryBody );
         responseHandler.ok( res, getCategoryByNameResult.message, getCategoryByNameResult.data || {} );
     } catch (error : unknown) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -79,7 +79,7 @@ const addCategory : (
         const addCategoryResult : Result = await categoryService.addCategory( categoryBody );
         responseHandler.created( res, addCategoryResult.message, addCategoryResult.data || {} );
     } catch (error : unknown) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -103,7 +103,7 @@ const updateCategory : (
         const updateCategoryResult : Result = await categoryService.updateCategory( categoryId, categoryBody );
         responseHandler.ok( res, updateCategoryResult.message, updateCategoryResult.data || {} );
     } catch (error : unknown) {
-        next( new Error() );
+        next( error );
     }
 }
 
@@ -124,7 +124,7 @@ const deleteCategory : (
         const deleteCategoryResult : Result = await categoryService.deleteCategory( categoryId );
         responseHandler.ok( res, deleteCategoryResult.message, deleteCategoryResult.data || {} );
     } catch (error : unknown) {
-        next( new Error() );
+        next( error );
     }
 }
 
