@@ -113,7 +113,7 @@ const addPermission : ( permissionBody : PermissionBody ) => Promise<Result> = a
 
 const getAllPermissions : () => Promise<Result> = async() => {
     try {
-        const isExistPermissions : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT * FROM permissions");
+        const isExistPermissions : [ RowDataPacket[], FieldPacket[]] = await db.query("SELECT * FROM permissions ORDER BY permissionId");
         if ( !isExistPermissions[0] || isExistPermissions[0]?.length == 0 ) {
             throw new notFoundError("Permissions not found");
         }
